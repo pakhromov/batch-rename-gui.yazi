@@ -1,6 +1,6 @@
 # batch-rename-gui.yazi
 
-Yazi's built-in bulk rename only works with terminal editors, this plugin adds possibility ro use batch rename in a GUI text editor like VS Code or Sublime Text. Single file or no selection uses Yazi's built-in inline rename. When multiple files are selected, a configured GUI editor is opened with one filename per line and renaming happens the moment you save the opened file.
+Yazi's built-in bulk rename only works with terminal editors, this plugin allows useing batch rename in a GUI text editor like VS Code or Sublime Text. Single file or no selection uses Yazi's built-in inline rename. When multiple files are selected, a configured GUI editor is opened with one filename per line and renaming happens the moment you save the opened file.
 
 
 https://github.com/user-attachments/assets/b721d8fe-1443-4eb6-91a7-dc284cb325ef
