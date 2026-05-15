@@ -59,14 +59,10 @@ return {
 		if inotify then inotify:wait() end
 
 		local rf = io.open(tmp, "r")
-		if not rf then
-			Command("rm"):arg({ tmp }):status()
-			return fail("Failed to read temp file")
-		end
+		if not rf then return fail("Failed to read temp file") end
 		local new_names = {}
 		for line in rf:lines() do new_names[#new_names + 1] = line end
 		rf:close()
-		Command("rm"):arg({ tmp }):status()
 
 		for i, old_path in ipairs(paths) do
 			local new_name = new_names[i]
