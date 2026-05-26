@@ -64,12 +64,32 @@ return {
 		for line in rf:lines() do new_names[#new_names + 1] = line end
 		rf:close()
 
+		if #new_names ~= #paths then
+			return fail(string.format(
+				"Line count mismatch: expected %d, got %d. No files renamed.",
+				#paths, #new_names
+			))
+		end
+
+		local function free_dest(dir, name)
+			local dest = dir .. "/" .. name
+			if not fs.cha(Url(dest)) then return dest end
+			local stem, ext = name:match("^(.+)(%.[^%.]+)$")
+			if not stem then stem, ext = name, "" end
+			local i = 1
+			while true do
+				dest = dir .. "/" .. stem .. "_" .. i .. ext
+				if not fs.cha(Url(dest)) then return dest end
+				i = i + 1
+			end
+		end
+
 		for i, old_path in ipairs(paths) do
 			local new_name = new_names[i]
 			local old_name = old_path:match("([^/]+)$") or old_path
 			if new_name and new_name ~= "" and new_name ~= old_name then
 				local dir = old_path:match("^(.+)/[^/]+$") or "."
-				Command("mv"):arg({ old_path, dir .. "/" .. new_name }):status()
+				Command("mv"):arg({ old_path, free_dest(dir, new_name) }):status()
 			end
 		end
 	end,
