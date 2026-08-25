@@ -1,7 +1,7 @@
 local get_selected = ya.sync(function(_)
 	local paths = {}
-	for _, url in pairs(cx.active.selected) do
-		paths[#paths + 1] = tostring(url)
+	for _, file in pairs(cx.active.selected) do
+		paths[#paths + 1] = tostring(file.url)
 	end
 	return paths
 end)
