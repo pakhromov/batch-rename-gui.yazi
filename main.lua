@@ -71,6 +71,32 @@ return {
 			))
 		end
 
+		-- The editor runs while yazi stays interactive, so the world can move on
+		-- between capturing these names and the save that wakes us up. Applying a
+		-- stale plan is how a buffer left open for an hour renames the wrong files.
+		-- Refuse instead of guessing.
+		local current, seen = get_selected(), {}
+		for _, path in ipairs(current) do
+			seen[path] = true
+		end
+		if #current ~= #paths then
+			return fail(string.format(
+				"Selection changed while the editor was open (%d selected, %d expected). No files renamed.",
+				#current, #paths
+			))
+		end
+		for _, path in ipairs(paths) do
+			if not seen[path] then
+				return fail("Selection changed while the editor was open. No files renamed.")
+			end
+			if not fs.cha(Url(path)) then
+				return fail(string.format(
+					"%s no longer exists — it was moved or renamed while the editor was open. No files renamed.",
+					path:match("([^/]+)$") or path
+				))
+			end
+		end
+
 		local function free_dest(dir, name)
 			local dest = dir .. "/" .. name
 			if not fs.cha(Url(dest)) then return dest end
